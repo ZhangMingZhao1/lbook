@@ -61,6 +61,21 @@ export const NavSearch = styled.input.attrs({
 	color: #666;
 	&::placeholder {
 		color: #999;
+    }
+    &.focused {
+		width: 240px;
+	}
+	&.slide-enter {
+		transition: all .2s ease-out;
+	}
+	&.slide-enter-active {
+		width: 240px;
+	}
+	&.slide-exit {
+		transition: all .2s ease-out;
+	}
+	&.slide-exit-active {
+		width: 160px;
 	}
 `; 
 
@@ -101,5 +116,9 @@ export const SearchWrapper = styled.div`
 		border-radius: 15px;
 		text-align: center;
         background: green;
-	}
+    }
+    &.focused {
+        background: #777;
+        color: #fff;
+    }
 `;
