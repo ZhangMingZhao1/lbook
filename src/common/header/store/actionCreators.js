@@ -7,3 +7,9 @@ export const searchFocus = () => ({
 export const searchBlur = () => ({
     type: constants.SEARCH_BLUR
 })
+
+export const getList = ()=> {
+    return (dispatch) => {
+        console.log(123);
+    }
+}
