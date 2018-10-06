@@ -24,19 +24,33 @@ import {
 class Header extends Component {
     
     getListArea = ()=> {
-        const {focused,list} = this.props;
-        if(focused) {
+        const {focused,list, page,handOnMouseEnter,handOnMouseLeave,mouseIn,hangleChangePage,totalPage} = this.props;
+        const pageList = [];
+        const newList = list.toJS();
+        //这里AJAX获取列表数据是异步的，一开始的list是空的，要等获取数据后才执行下面
+        if(newList.length) {
+            for (let index = (page-1)*10; index < page*10; index++) {
+                console.log(index);
+                pageList.push(
+                    <SearchInfoItem key={newList[index]}>{newList[index]}</SearchInfoItem>
+                )
+                
+            }
+        }
+ 
+        if(focused || mouseIn) {
             return (
-                <SearchInfo>
+                <SearchInfo 
+                    onMouseEnter={handOnMouseEnter}
+                    onMouseLeave={handOnMouseLeave}
+                >
                     <SearchInfoTitle>
                         热门搜索
-                        <SearchInfoSwitch>换一批</SearchInfoSwitch>
+                        <SearchInfoSwitch onClick={()=>hangleChangePage(page,totalPage)}>换一批</SearchInfoSwitch>
                     </SearchInfoTitle>
                     <SearchInfoList>
                         {
-                            list.map((item)=> {
-                                return <SearchInfoItem key={item}>{item}</SearchInfoItem>
-                            })
+                          pageList
                         }
                     </SearchInfoList>
                 </SearchInfo>
@@ -94,18 +108,36 @@ const mapStateToProps = (state) => {
     return {
         // focused: state.get("header").get('focused')
         focused: state.getIn(['header','focused']),
-        list: state.getIn(['header', 'list'])
+        list: state.getIn(['header', 'list']),
+        page: state.getIn(['header', 'page']),
+        mouseIn: state.getIn(['header','mouseIn']),
+        totalPage: state.getIn(['header','totalPage'])
     }
 }
 
 const mapDispathToProps = (dispatch) => {
     return {
          handleInputFocus() {
+             //注意推荐数据是获取焦点后才会发送AJAX请求，所以上面的要判断一下数据空
              dispatch(actionCreators.getList());
              dispatch(actionCreators.searchFocus());
          },
          handleInputBlur() {
              dispatch(actionCreators.searchBlur());
+         },
+         handOnMouseEnter() {
+            dispatch(actionCreators.mouseEnter());
+         },
+         handOnMouseLeave() {
+             dispatch(actionCreators.mouseLeave());
+         },
+         hangleChangePage(page,totalPage) {
+             if(page<totalPage) {
+                 dispatch(actionCreators.changePage(page+1));
+             }else {
+                dispatch(actionCreators.changePage(1));
+             }
+             
          }
     }
 }
