@@ -46,7 +46,10 @@ class Header extends Component {
                 >
                     <SearchInfoTitle>
                         热门搜索
-                        <SearchInfoSwitch onClick={()=>hangleChangePage(page,totalPage)}>换一批</SearchInfoSwitch>
+                        <SearchInfoSwitch 
+                            onClick={()=>hangleChangePage(page, totalPage, this.spinIcon)}></SearchInfoSwitch>
+                        <i ref={(icon) => {this.spinIcon = icon}} className="iconfont spin">&#xe851;</i>
+                        换一批                      
                     </SearchInfoTitle>
                     <SearchInfoList>
                         {
@@ -85,7 +88,7 @@ class Header extends Component {
                             onBlur={handleInputBlur}
                         ></NavSearch>
                     </CSSTransition>
-                    <i className="iconfont">&#xe614;</i>
+                    <i className={focused? 'focused iconfont zoom': 'iconfont zoom'}>&#xe614;</i>
                     {this.getListArea()}
                 </SearchWrapper>
                 
@@ -131,7 +134,8 @@ const mapDispathToProps = (dispatch) => {
          handOnMouseLeave() {
              dispatch(actionCreators.mouseLeave());
          },
-         hangleChangePage(page,totalPage) {
+         hangleChangePage(page,totalPage,spin) {
+             console.log(spin);
              if(page<totalPage) {
                  dispatch(actionCreators.changePage(page+1));
              }else {
